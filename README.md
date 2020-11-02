@@ -31,7 +31,7 @@ versionName = versioning.generateVersionName()
 ## Version code policy
 
 For master branch (aka production build) it'll be calculated from major, minor and
-patch versions using the following formula: <major> * 1000000 + <minor> * 1000 + <patch>, eg.:
+patch versions using the following formula: \<major\> * 1000000 + \<minor\> * 1000 + \<patch\>, eg.:
 
 - 1000 (for 0.1.0),
 - 3009 (for 0.3.9),
@@ -49,7 +49,7 @@ pushed to the active branch, eg.:
 ## Version name policy
 
 For master branch (aka production build) it'll be formatted using the following
-pattern "<major>.<minor>.<patch>, eg.:
+pattern \<major\>.\<minor\>.\<patch\>, eg.:
 
 - "0.1.0",
 - "0.3.9",
@@ -58,7 +58,7 @@ pattern "<major>.<minor>.<patch>, eg.:
 > Major, minor and patch numbers will be taken from latest master tag.
 
 For other branches (aka development build) it'll be formatted using the
-following pattern "<hash>-<date> (<count>)", eg.:
+following pattern \<hash\>-\<date\> (\<count\>), eg.:
 
 - g2cdd822-22.10.2020 (2251),
 - gfc33cb6-22.10.2020 (2253),
@@ -81,7 +81,7 @@ The following Gradle tasks are available in `versioning` group:
 
 ## License
 
-    Copyright 2020 Tomasz Dzieniak, Adrian Zalewski
+    Copyright 2020 Tomasz Dzieniak, Mateusz Wrzos
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
