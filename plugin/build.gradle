@@ -1,0 +1,37 @@
+//region Startup Plugins
+
+apply plugin: "groovy"
+
+//endregion
+
+//region Dependencies
+
+dependencies {
+
+  //region Gradle & Groovy
+
+  implementation gradleApi()
+  implementation localGroovy()
+
+  //endregion
+
+  //region Android
+
+  implementation deps.build.android_gradle_plugin
+
+  //endregion
+}
+
+//endregion
+
+//region Publication
+
+apply from: rootProject.file("gradle/gradle-mvn-push.gradle")
+
+//endregion
+
+//region Source
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+//endregion

@@ -1,0 +1,34 @@
+//region Dependencies
+
+def deps = [:]
+ext.deps = deps
+
+//region Versions
+
+def versions = [:]
+versions.android_gradle_plugin = "4.1.0"
+deps.versions = versions
+
+//endregion
+
+//region Build
+
+def build = [:]
+build.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.build = build
+
+//endregion
+
+//endregion
+
+//region Repositories
+
+static def addRepos(RepositoryHandler handler) {
+  handler.google()
+  handler.jcenter()
+  handler.mavenCentral()
+}
+
+ext.addRepos = this.&addRepos
+
+//endregion

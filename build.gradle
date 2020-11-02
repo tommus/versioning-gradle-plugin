@@ -1,0 +1,41 @@
+//region Build Script
+
+buildscript {
+
+  //region Repositories
+
+  repositories {
+    apply from: "versions.gradle"
+    addRepos(repositories)
+  }
+
+  //endregion
+
+  //region Dependencies
+
+  dependencies {
+    classpath deps.build.android_gradle_plugin
+  }
+
+  //endregion
+}
+
+//endregion
+
+//region All Projects
+
+allprojects {
+  repositories {
+    addRepos(repositories)
+  }
+}
+
+//endregion
+
+//region Sub Projects
+
+subprojects { project ->
+  group = GROUP
+}
+
+//endregion
