@@ -41,7 +41,7 @@ class VersioningPluginExtension {
   private static int productionVersionCode() {
 
     // Retrieve most recent master's tag versioning info.
-    def (major, minor, patch, build, sha) = getLatestMasterTag()
+    def (major, minor, patch, build, sha) = getCurrentBranchLatestTag()
 
     // Format versioning info as production ready version code.
     return (major.toInteger() * 1_000_000) + (minor.toInteger() * 1_000) + patch.toInteger()
@@ -84,7 +84,7 @@ class VersioningPluginExtension {
   static String generateVersionName() {
 
     // Retrieve most recent master's tag versioning info.
-    def (major, minor, patch, _, sha) = getLatestMasterTag()
+    def (major, minor, patch, _, sha) = getCurrentBranchLatestTag()
 
     // Generate development / production version code.
     def code = generateVersionCode()
@@ -119,19 +119,20 @@ class VersioningPluginExtension {
     return Cli.execute("git describe --tags").split("-")[0] ?: "0.0.0"
   }
 
-  private static Object getLatestMasterTag() {
+  private static Object getCurrentBranchLatestTag() {
 
     // Retrieve the most recent tag that is reachable from a commit.
-    def name = "git describe master --tags --long"
+    def name = "git describe ${getCurrentBranchName()} --tags --long"
         .execute()
-        .text.replace("v", "")
+        .text
+        .replace("v", "")
         .trim()
 
     // Split description so it's possible to get a tag.
-    def (tag, build, sha) = name.tokenize("-")
+    def (tag, build, sha) = name.tokenize('-')
 
     // Extract major, minor and patch versions from a tag.
-    def (major, minor, patch) = (tag != null) ? tag.tokenize(".") : [0, 0, 0]
+    def (major, minor, patch) = (tag != null) ? tag.tokenize('.') : [0, 0, 0]
 
     // Return a collection of versioning information.
     return [major, minor, patch, build, sha]
