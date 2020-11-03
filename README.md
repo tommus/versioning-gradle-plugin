@@ -51,9 +51,9 @@ pushed to the active branch, eg.:
 For master branch (aka production build) it'll be formatted using the following
 pattern `<major>`.`<minor>`.`<patch>`, eg.:
 
-- "0.1.0"
-- "0.3.9"
-- "1.0.0"
+- 0.1.0
+- 0.3.9
+- 1.0.0
 
 > Major, minor and patch numbers will be taken from latest master tag.
 
