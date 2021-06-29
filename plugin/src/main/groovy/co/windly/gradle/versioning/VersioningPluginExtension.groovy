@@ -12,6 +12,17 @@ class VersioningPluginExtension {
    **/
   final static ENV_JENKINS = "JENKINS_HOME"
 
+  /**
+   * Defines an environment variable that allows to receive branch name
+   * while building application on Jenkins CI using multibranch pipeline.*/
+  final static ENV_BRANCH_NAME = "BRANCH_NAME"
+
+  /**
+   * Defines an environment variable that allows to receive branch name
+   * while building application on Jenkins CI using declarative pipeline or
+   * freestyle project supported by Git plugin.*/
+  final static ENV_GIT_BRANCH = "GIT_BRANCH"
+
   //endregion
 
   //region Version Code
@@ -135,14 +146,14 @@ class VersioningPluginExtension {
 
   private static String getCurrentBranchFromJenkins() {
 
-    // Use "BRANCH_NAME" for multibranch pipeline.
-    def multibranch = System.getenv("BRANCH_NAME")
+    // Use environment variable exclusive for multibranch pipeline.
+    def multibranch = System.getenv(ENV_BRANCH_NAME)
     if (multibranch != null) {
       return multibranch
     }
 
-    // Use "GIT_BRANCH" for declarative pipeline and freestyle project.
-    def declarative = System.getenv("GIT_BRANCH")
+    // Use environment variable exclusive for pipeline or freestyle project.
+    def declarative = System.getenv(ENV_GIT_BRANCH)
     if (declarative != null) {
       return declarative
     }
