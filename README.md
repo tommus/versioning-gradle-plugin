@@ -11,7 +11,7 @@ on repository details.
 ```groovy
 dependencies {
   (...)
-  classpath "co.windly:versioning-gradle-plugin:1.0.1"
+  classpath "co.windly:versioning-gradle-plugin:1.0.2"
 }
 ```
 

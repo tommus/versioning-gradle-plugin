@@ -4,6 +4,16 @@ import java.text.SimpleDateFormat
 
 class VersioningPluginExtension {
 
+  //region Constants
+
+  /**
+   * Defines an environment variable that allows to check whether
+   * this script was run on Jenkins CI.
+   **/
+  final static ENV_JENKINS = "JENKINS_HOME"
+
+  //endregion
+
   //region Version Code
 
   /**
@@ -23,7 +33,7 @@ class VersioningPluginExtension {
    * - 2251,
    * - 2253,
    * - 2282.
-   */
+   **/
   static int generateVersionCode() {
 
     // Retrieve a current branch name.
@@ -80,7 +90,7 @@ class VersioningPluginExtension {
    * Hash is a hash string retrieved from latest commit to the current branch.
    * Date refers to the present day. Count is a number of commits pushed to the
    * current branch.
-   */
+   **/
   static String generateVersionName() {
 
     // Retrieve most recent master's tag versioning info.
@@ -93,8 +103,8 @@ class VersioningPluginExtension {
     def date = generateBuildDate()
 
     // Return a development / production version name.
-    return (getCurrentBranchName() == "master") ? "${major}.${minor}.${patch}" :
-        "${sha}-${date} ($code)"
+    return (getCurrentBranchName() == "master" || getCurrentBranchName() == "production") ?
+      "${major}.${minor}.${patch}" : "${sha}-${date} ($code)"
   }
 
   //endregion
@@ -109,13 +119,50 @@ class VersioningPluginExtension {
 
   static String getCurrentBranchName() {
 
+    // Check whether run on Jenkins.
+    def jenkins = runByJenkins()
+
     // Retrieve a current branch name.
-    return Cli.execute("git rev-parse --abbrev-ref HEAD")
+    if (jenkins) {
+      return getCurrentBranchFromJenkins()
+    } else {
+      return Cli.execute("git rev-parse --abbrev-ref HEAD")
+    }
   }
 
-  static String getLatestTag() {
+  // TODO: 30.06.2021 It seems like below is not being properly evaluated
+  //  on runtime while executing on Jenkins CI.
 
-    // Retrieve the most recent tag that is reachable from a commit.
+  private static String getCurrentBranchFromJenkins() {
+
+    // Use "BRANCH_NAME" for multibranch pipeline.
+    def multibranch = System.getenv("BRANCH_NAME")
+    if (multibranch != null) {
+      return multibranch
+    }
+
+    // Use "GIT_BRANCH" for declarative pipeline and freestyle project.
+    def declarative = System.getenv("GIT_BRANCH")
+    if (declarative != null) {
+      return declarative
+    }
+
+    // Return an information the Jenkins does not support any sort of
+    // branching (eg. a different source control system was used).
+    return "unsupported"
+  }
+
+  /**
+   * Returns an information whether this build was run by Jenkins CI.
+   **/
+  private static boolean runByJenkins() {
+    return System.getenv(ENV_JENKINS) != null
+  }
+
+  /**
+   * Retrieve the most recent tag that is reachable from a commit.
+   **/
+  static String getLatestTag() {
     return Cli.execute("git describe --tags").split("-")[0] ?: "0.0.0"
   }
 
@@ -123,10 +170,10 @@ class VersioningPluginExtension {
 
     // Retrieve the most recent tag that is reachable from a commit.
     def name = "git describe ${getCurrentBranchName()} --tags --long"
-        .execute()
-        .text
-        .replace("v", "")
-        .trim()
+      .execute()
+      .text
+      .replace("v", "")
+      .trim()
 
     // Split description so it's possible to get a tag.
     def (tag, build, sha) = name.tokenize('-')
